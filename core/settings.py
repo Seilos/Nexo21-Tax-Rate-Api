@@ -59,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'bcv_service.middleware.VisitCounterMiddleware',
 ]
 
 # CORS: Allow the Nexo21 panel and future SaaS clients to call this API

@@ -61,3 +61,32 @@ class EconomicIndicator(models.Model):
 
     def __str__(self):
         return f"{self.get_name_display()} - {self.value}{self.unit} ({self.fecha_referencia})"
+
+class PageVisit(models.Model):
+    TYPE_CHOICES = (
+        ('WEB', 'Página Web (Humano)'),
+        ('API', 'Consumo API'),
+        ('BOT', 'Bot / Monitor'),
+    )
+    PLATFORM_CHOICES = (
+        ('PC', 'Escritorio'),
+        ('MOBILE', 'Móvil'),
+        ('TABLET', 'Tablet'),
+        ('UNKNOWN', 'Desconocido'),
+    )
+    
+    path = models.CharField(max_length=255, verbose_name="Ruta")
+    date = models.DateField(auto_now_add=True, verbose_name="Fecha")
+    count = models.PositiveIntegerField(default=0, verbose_name="Número de Visitas")
+    visitor_type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='WEB', verbose_name="Tipo de Visitante")
+    platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES, default='UNKNOWN', verbose_name="Plataforma")
+    referer = models.CharField(max_length=500, blank=True, null=True, verbose_name="Origen (Referer)")
+
+    class Meta:
+        verbose_name = "Estadística de Visita"
+        verbose_name_plural = "Estadísticas de Visitas"
+        unique_together = ('path', 'date', 'visitor_type', 'platform', 'referer')
+        ordering = ['-date', '-count']
+
+    def __str__(self):
+        return f"{self.path} ({self.visitor_type} - {self.platform}) - {self.date}"
