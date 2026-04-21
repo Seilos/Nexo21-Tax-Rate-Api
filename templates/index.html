@@ -54,6 +54,100 @@
         .download-hint { font-size: 0.62rem; color: #6c757d; font-weight: 600; margin-top: 15px; border-top: 1px solid #eee; pt-2; }
         .download-hint i { color: #0d6efd; margin-right: 4px; }
         .usage-tag { font-size: 0.65rem; color: #6f42c1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+
+        /* Estilos para el Simulador de Factura */
+        .invoice-table th { font-size: 0.75rem; text-transform: uppercase; color: #6c757d; border: 0; }
+        .invoice-row td { padding: 8px 4px; border: 0; }
+        .invoice-input { border: 1px solid #dee2e6; border-radius: 6px; padding: 6px 10px; font-size: 0.9rem; width: 100%; transition: border-color 0.2s; }
+        .invoice-input:focus { border-color: #0d6efd; outline: none; box-shadow: 0 0 0 3px rgba(13,110,253,0.1); }
+        .btn-remove-item { color: #dc3545; background: #fff5f5; border: 1px solid #ffebeb; padding: 4px 10px; border-radius: 6px; transition: all 0.2s; }
+        .btn-remove-item:hover { background: #dc3545; color: white; }
+        .summary-box { background: #f8f9fa; border-radius: 12px; border: 2px solid #fff; box-shadow: inset 0 0 15px rgba(0,0,0,0.02); }
+        .currency-switch { font-size: 0.7rem; font-weight: 800; cursor: pointer; user-select: none; }
+        .rate-badge { font-size: 0.75rem; background: #e9ecef; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+
+        /* Z-index: nav dropdown siempre por encima de las cards */
+        .nav.nav-pills { position: relative; z-index: 1050; }
+        .dropdown-menu { z-index: 1100 !important; }
+        .chart-container.sticky-top, .summary-box.sticky-top { z-index: 10; }
+
+        /* ═══════════════════════════════════════════════════
+           ESTILOS EXCLUSIVOS PARA IMPRESIÓN
+           ═══════════════════════════════════════════════════ */
+        @media print {
+            /* Ocultar absolutamente todo */
+            body > * { display: none !important; }
+
+            /* Mostrar SOLO el área de impresión */
+            #print-overlay {
+                display: block !important;
+                position: fixed;
+                inset: 0;
+                background: white;
+                padding: 15mm 18mm;
+                font-family: 'Inter', Arial, sans-serif;
+                font-size: 11pt;
+                color: #111;
+            }
+
+            .pr-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                border-bottom: 2px solid #000;
+                padding-bottom: 10px;
+                margin-bottom: 18px;
+            }
+            .pr-title { font-size: 22pt; font-weight: 900; letter-spacing: 2px; }
+            .pr-subtitle { font-size: 9pt; color: #555; margin-top: 2px; }
+            .pr-meta { text-align: right; font-size: 9pt; line-height: 1.8; }
+            .pr-meta strong { font-size: 10pt; }
+
+            .pr-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .pr-table thead tr { border-bottom: 1.5px solid #333; }
+            .pr-table th {
+                padding: 6px 8px;
+                font-size: 8.5pt;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                font-weight: 700;
+                color: #333;
+            }
+            .pr-table td { padding: 7px 8px; font-size: 10pt; border-bottom: 0.5px solid #e0e0e0; }
+            .pr-table tbody tr:last-child td { border-bottom: none; }
+            .pr-table .text-right { text-align: right; }
+            .pr-table .text-center { text-align: center; }
+
+            .pr-totals {
+                margin-left: auto;
+                width: 260px;
+                border-top: 1.5px solid #333;
+                padding-top: 10px;
+            }
+            .pr-total-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 3px 0;
+                font-size: 10pt;
+            }
+            .pr-total-row.grand {
+                border-top: 1.5px solid #333;
+                margin-top: 6px;
+                padding-top: 6px;
+                font-size: 13pt;
+                font-weight: 900;
+            }
+            .pr-total-row.ref { font-size: 8.5pt; color: #555; }
+
+            .pr-footer {
+                margin-top: 30px;
+                border-top: 1px dashed #aaa;
+                padding-top: 10px;
+                font-size: 7.5pt;
+                color: #777;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -79,6 +173,18 @@
                 <li class="nav-item"><button class="nav-link" id="graficos-tab" data-bs-toggle="pill" data-bs-target="#tab-graficos" type="button" role="tab">Estadísticas</button></li>
                 <li class="nav-item"><button class="nav-link" id="indicadores-tab" data-bs-toggle="pill" data-bs-target="#tab-indicadores" type="button" role="tab">Indicadores</button></li>
                 <li class="nav-item"><button class="nav-link" id="historial-tab" data-bs-toggle="pill" data-bs-target="#tab-historial" type="button" role="tab">Historial</button></li>
+                <li class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle" id="herramientas-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-tools me-1"></i> Herramientas
+                    </button>
+                    <ul class="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby="herramientas-dropdown">
+                        <li><button class="dropdown-item py-2" onclick="showTool('iva')"><i class="fas fa-calculator me-2 text-primary"></i> Calculadora de IVA</button></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item py-2 disabled text-muted" href="#"><i class="fas fa-lock me-2"></i> Próximamente...</a></li>
+                    </ul>
+                </li>
+                <!-- Botón oculto para activar la pestaña vía API de Bootstrap -->
+                <li class="nav-item d-none"><button class="nav-link" id="herramientas-tab" data-bs-toggle="pill" data-bs-target="#tab-herramientas" type="button" role="tab"></button></li>
             </ul>
         </div>
 
@@ -217,14 +323,604 @@
                     </div>
                 </div>
             </div>
+
+            <!-- HERRAMIENTAS -->
+            <div class="tab-pane fade" id="tab-herramientas" role="tabpanel">
+                <div id="iva-calculator">
+                    <div class="row g-4">
+                        <!-- PANEL DE ITEMS (IZQUIERDA) -->
+                        <div class="col-lg-8">
+                            <div class="chart-container">
+                                <div class="d-flex flex-column mb-4 border-bottom pb-3">
+                                    <h5 class="fw-bold mb-3"><i class="fas fa-file-invoice-dollar me-2 text-primary"></i>Simulador de Factura</h5>
+                                    
+                                    <div class="row g-3 bg-light p-3 rounded-3 border">
+                                        <!-- Moneda Global -->
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold text-muted mb-1">Moneda de Ingreso</label>
+                                            <div class="btn-group w-100" role="group">
+                                                <input type="radio" class="btn-check" name="global_currency" id="curr_ved" value="VED" checked onchange="updateGlobalSettings()">
+                                                <label class="btn btn-outline-primary btn-sm fw-bold" for="curr_ved">Bs.</label>
+                                                <input type="radio" class="btn-check" name="global_currency" id="curr_usd" value="USD" onchange="updateGlobalSettings()">
+                                                <label class="btn btn-outline-primary btn-sm fw-bold" for="curr_usd">USD ($)</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Tipo de Precio -->
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold text-muted mb-1">Tipo de Precio</label>
+                                            <div class="btn-group w-100" role="group">
+                                                <input type="radio" class="btn-check" name="price_type" id="price_base" value="base" checked onchange="updateGlobalSettings()">
+                                                <label class="btn btn-outline-secondary btn-sm fw-bold" for="price_base">Base (+IVA)</label>
+                                                <input type="radio" class="btn-check" name="price_type" id="price_total" value="total" onchange="updateGlobalSettings()">
+                                                <label class="btn btn-outline-secondary btn-sm fw-bold" for="price_total">Total (Inc. IVA)</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Tasa de Cambio -->
+                                        <div class="col-md-4">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <label class="form-label small fw-bold text-muted m-0">Tasa de Cambio</label>
+                                                <div class="form-check form-switch m-0 p-0 d-flex align-items-center">
+                                                    <input class="form-check-input ms-0 me-1" type="checkbox" id="use_custom_rate" onchange="toggleCustomRate()">
+                                                    <label class="form-check-label text-muted" style="font-size: 0.7rem;" for="use_custom_rate">Propia</label>
+                                                </div>
+                                            </div>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-white fw-bold" id="rate_label">BCV</span>
+                                                <input type="text" inputmode="decimal" id="global_rate" class="form-control"
+                                                    value="{{ bcv_usd.value|floatformat:4|default:'1' }}"
+                                                    readonly
+                                                    onfocus="handleNumericFocus(this)"
+                                                    onblur="handleNumericBlur(this, bcvRate)"
+                                                    oninput="sanitizeNumeric(this, false); calculateTotals()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-none d-md-flex row g-2 text-muted small fw-bold text-uppercase border-bottom pb-2 mb-3 px-2">
+                                    <div class="col-md-5">Descripción</div>
+                                    <div class="col-md-2 text-center">Cant.</div>
+                                    <div class="col-md-3">Precio Unit.</div>
+                                    <div class="col-md-2 text-center">IVA</div>
+                                </div>
+                                <div id="invoice-items-body" class="d-flex flex-column mb-3">
+                                    <!-- Items dinamicos aqui -->
+                                </div>
+
+                                <div class="d-flex gap-2 mt-2">
+                                    <button class="btn btn-outline-primary btn-sm rounded-pill px-4" onclick="addInvoiceItem()">
+                                        <i class="fas fa-plus me-2"></i>Añadir Artículo
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm rounded-pill px-4" onclick="clearInvoice()">
+                                        <i class="fas fa-trash-alt me-2"></i>Limpiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL DE RESUMEN (DERECHA) -->
+                        <div class="col-lg-4">
+                            <div class="chart-container summary-box sticky-top" style="top: 20px;">
+                                <h6 class="fw-bold mb-4 text-center text-uppercase letter-spacing-1">Resumen de Cuenta</h6>
+                                
+                                <!-- Subtotal Bruto + Descuento -->
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Subtotal Bruto:</span>
+                                    <span class="fw-bold small">Bs. <span id="total_bruto">0,00</span></span>
+                                </div>
+
+                                <!-- Campo de descuento global -->
+                                <div class="bg-white rounded-3 border p-2 mb-3">
+                                    <label class="form-label small fw-bold text-muted mb-2">Descuento Global</label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" inputmode="decimal" id="discount_value" class="form-control"
+                                            placeholder="0"
+                                            onfocus="handleNumericFocus(this)"
+                                            onblur="handleNumericBlur(this, '')"
+                                            oninput="sanitizeNumeric(this, false); calculateTotals()">
+                                        <button class="btn btn-outline-secondary btn-sm fw-bold" id="discount_type_btn"
+                                            onclick="toggleDiscountType()" style="min-width:42px;">%</button>
+                                    </div>
+                                    <div id="discount_display_row" class="d-flex justify-content-between mt-2 text-danger d-none">
+                                        <span class="small">(-) Descuento:</span>
+                                        <span class="fw-bold small">Bs. <span id="discount_amount_bs">0,00</span></span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Base Imponible:</span>
+                                    <span class="fw-bold">Bs. <span id="total_base">0,00</span></span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Monto Exento:</span>
+                                    <span class="fw-bold">Bs. <span id="total_exempt">0,00</span></span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span class="text-muted">IVA Total:</span>
+                                    <span class="fw-bold text-primary">Bs. <span id="total_iva">0,00</span></span>
+                                </div>
+
+                                <!-- IGTF -->
+                                <div class="bg-white rounded-3 border p-3 mb-3">
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" id="igtf_toggle" onchange="toggleIgtf()">
+                                        <label class="form-check-label small fw-bold" for="igtf_toggle">¿Pago parcial en Divisas? (IGTF 3%)</label>
+                                    </div>
+                                    <div id="igtf_input_row" class="mt-3 d-none">
+                                        <label class="form-label small text-muted fw-bold mb-1">Monto pagado en divisas (USD)</label>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text">$</span>
+                                            <input type="text" inputmode="decimal" id="igtf_amount_usd"
+                                                class="form-control" placeholder="0.00" min="0"
+                                                onfocus="handleNumericFocus(this)"
+                                                onblur="handleNumericBlur(this, '')"
+                                                oninput="sanitizeNumeric(this, false); calculateTotals()">
+                                            <span class="input-group-text text-muted small" id="igtf_amount_bs_label">= Bs. 0,00</span>
+                                        </div>
+                                        <div class="text-muted" style="font-size: 0.7rem; margin-top: 4px;">El IGTF se calcula sobre el equivalente en Bs. del monto en divisas.</div>
+                                    </div>
+                                </div>
+
+                                <div id="igtf_display_row" class="d-flex justify-content-between mb-3 text-danger d-none">
+                                    <span>IGTF (3%):</span>
+                                    <span class="fw-bold">Bs. <span id="total_igtf">0,00</span></span>
+                                </div>
+
+                                <div class="border-top pt-3 mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="h5 fw-bold mb-0">TOTAL BS.</span>
+                                        <span class="h4 fw-bold text-success mb-0">Bs. <span id="grand_total_bs">0,00</span></span>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted fw-bold">REF: $ <span id="grand_total_usd">0,00</span></small>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button class="btn btn-primary flex-grow-1 rounded-pill fw-bold py-2 shadow-sm" onclick="printInvoice()">
+                                        <i class="fas fa-print me-2"></i>Imprimir Recibo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
+
+    <!-- Área oculta exclusiva para imprimir (solo visible con @media print) -->
+    <div id="print-overlay" style="display:none;"></div>
 
     <footer class="text-center text-muted small py-4">&copy; 2026 Nexo 21 - Inteligencia Económica.</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // ESTADO GLOBAL DE LA FACTURA
+        let invoiceItems = [
+            { id: Date.now(), desc: '', qty: 1, price: 0, iva: 0.16 }
+        ];
+
+        // ─── IMPRESIÓN PROFESIONAL ────────────────────────────────────────
+        function printInvoice() {
+            const rate    = parseFloat(document.getElementById('global_rate').value) || 1;
+            const useIgtf = document.getElementById('igtf_toggle').checked;
+            const igtfUsd = useIgtf ? (parseFloat(document.getElementById('igtf_amount_usd').value) || 0) : 0;
+            const igtfBs  = igtfUsd * rate;
+            const igtf    = igtfBs * 0.03;
+            const globalCurrency = document.querySelector('input[name="global_currency"]:checked').value;
+            const isPriceTotal   = document.querySelector('input[name="price_type"]:checked').value === 'total';
+            const rateLabel      = document.getElementById('rate_label').innerText;
+            const today          = new Date().toLocaleDateString('es-VE', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+            let totalBase = 0, totalExempt = 0, totalIva = 0;
+            let rowsHtml = '';
+
+            invoiceItems.forEach((item, i) => {
+                if (!item.desc && item.price === 0) return; // saltar filas vacías
+                let basePriceInput = item.price;
+                if (isPriceTotal && item.iva > 0) basePriceInput = item.price / (1 + item.iva);
+                const basePriceBs = globalCurrency === 'USD' ? basePriceInput * rate : basePriceInput;
+                const lineTotalBase = basePriceBs * item.qty;
+                const lineIva = lineTotalBase * item.iva;
+                const lineTotal = lineTotalBase + lineIva;
+
+                if (item.iva > 0) { totalBase += lineTotalBase; totalIva += lineIva; }
+                else { totalExempt += lineTotalBase; }
+
+                const ivaLabel = item.iva === 0.16 ? '16%' : item.iva === 0.08 ? '8%' : 'Exento';
+                const currSym  = globalCurrency === 'VED' ? 'Bs.' : '$';
+
+                rowsHtml += `
+                    <tr>
+                        <td>${i + 1}. ${item.desc || '(sin descripción)'}</td>
+                        <td class="text-center">${item.qty}</td>
+                        <td class="text-right">${currSym} ${item.price.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        <td class="text-center">${ivaLabel}</td>
+                        <td class="text-right">Bs. ${lineTotalBase.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        <td class="text-right">Bs. ${lineTotal.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    </tr>`;
+            });
+
+            // Descuento global
+            const discountRawPrint = parseFloat(String(document.getElementById('discount_value').value).replace(',', '.')) || 0;
+            const rawTotalPrint = totalBase + totalExempt;
+            let discountBsPrint = 0;
+            if (discountRawPrint > 0 && rawTotalPrint > 0) {
+                discountBsPrint = discountIsPercent
+                    ? rawTotalPrint * (discountRawPrint / 100)
+                    : Math.min(discountRawPrint, rawTotalPrint);
+            }
+            const discFactorPrint = rawTotalPrint > 0 ? (rawTotalPrint - discountBsPrint) / rawTotalPrint : 1;
+            const dBase   = totalBase   * discFactorPrint;
+            const dExempt = totalExempt * discFactorPrint;
+            const dIva    = totalIva    * discFactorPrint;
+
+            const subtotoBruto = totalBase + totalExempt + totalIva;
+            const subtotal   = dBase + dExempt + dIva;
+            const grandTotal = subtotal + igtf;
+            const fmt = (n) => n.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            const discountLabel = discountIsPercent ? discountRawPrint + '%' : 'Bs. ' + fmt(discountBsPrint);
+            const discountRow = discountBsPrint > 0 ? `
+                <div class="pr-total-row" style="color:#c00;">
+                    <span>(-) Descuento (${discountLabel}):</span>
+                    <span>- Bs. ${fmt(discountBsPrint)}</span>
+                </div>` : '';
+
+            const igtfRow = useIgtf && igtf > 0 ? `
+                <div class="pr-total-row" style="color:#c00;">
+                    <span>IGTF (3%) sobre $ ${fmt(igtfUsd)} = Bs. ${fmt(igtfBs)}:</span>
+                    <span>Bs. ${fmt(igtf)}</span>
+                </div>` : '';
+
+            const exemptRow = dExempt > 0 ? `
+                <div class="pr-total-row">
+                    <span>Monto Exento (E):</span><span>Bs. ${fmt(dExempt)}</span>
+                </div>` : '';
+
+            document.getElementById('print-overlay').innerHTML = `
+                <div class="pr-header">
+                    <div>
+                        <div class="pr-title">RECIBO</div>
+                        <div class="pr-subtitle">Cotización / Simulación Fiscal</div>
+                    </div>
+                    <div class="pr-meta">
+                        <div><strong>Fecha:</strong> ${today}</div>
+                        <div><strong>Tasa ${rateLabel}:</strong> Bs. ${fmt(rate)} / USD</div>
+                        <div><strong>Precios ingresados en:</strong> ${globalCurrency === 'VED' ? 'Bolívares (Bs.)' : 'Dólares (USD)'}</div>
+                    </div>
+                </div>
+
+                <table class="pr-table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th class="text-center">Cant.</th>
+                            <th class="text-right">Precio Unit.</th>
+                            <th class="text-center">IVA</th>
+                            <th class="text-right">Base Imponible</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+
+                <div class="pr-totals">
+                    <div class="pr-total-row" style="color:#555;">
+                        <span>Subtotal Bruto:</span><span>Bs. ${fmt(subtotoBruto)}</span>
+                    </div>
+                    ${discountRow}
+                    <div class="pr-total-row">
+                        <span>Base Imponible:</span><span>Bs. ${fmt(dBase)}</span>
+                    </div>
+                    ${exemptRow}
+                    <div class="pr-total-row" style="color:#0d6efd;">
+                        <span>IVA Total:</span><span>Bs. ${fmt(dIva)}</span>
+                    </div>
+                    ${igtfRow}
+                    <div class="pr-total-row grand">
+                        <span>TOTAL A PAGAR:</span><span>Bs. ${fmt(grandTotal)}</span>
+                    </div>
+                    <div class="pr-total-row ref">
+                        <span>Referencia USD:</span><span>$ ${(grandTotal / rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                </div>
+
+                <div class="pr-footer">
+                    Este documento es una simulación/cotización generada con el Simulador de Factura de <strong>Nexo 21</strong>.
+                    No constituye una factura fiscal legal. Tasa de cambio referencial BCV.
+                </div>
+            `;
+
+            window.print();
+        }
+
+        function showTool(tool) {
+            const tabTriggerEl = document.getElementById('herramientas-tab');
+            const tab = new bootstrap.Tab(tabTriggerEl);
+            tab.show();
+        }
+
+        function addInvoiceItem() {
+            invoiceItems.push({ id: Date.now(), desc: '', qty: 1, price: 0, iva: 0.16 });
+            renderRows();
+            calculateTotals();
+        }
+
+        function removeItem(id) {
+            invoiceItems = invoiceItems.filter(item => item.id !== id);
+            renderRows();
+            calculateTotals();
+        }
+
+        function clearInvoice() {
+            invoiceItems = [{ id: Date.now(), desc: '', qty: 1, price: 0, iva: 0.16 }];
+            document.getElementById('igtf_toggle').checked = false;
+            document.getElementById('igtf_input_row').classList.add('d-none');
+            document.getElementById('igtf_amount_usd').value = '';
+            document.getElementById('discount_value').value = '';
+            discountIsPercent = true;
+            document.getElementById('discount_type_btn').innerText = '%';
+            document.getElementById('discount_type_btn').className = 'btn btn-outline-secondary btn-sm fw-bold';
+            renderRows();
+            calculateTotals();
+        }
+
+        // ─── HELPERS DE INPUTS NUMÉRICOS ────────────────────────────────────
+        // Convierte coma en punto, elimina chars inválidos, bloquea negativos
+        function sanitizeNumeric(el, integerOnly) {
+            let val = el.value.replace(',', '.');
+            if (integerOnly) {
+                val = val.replace(/[^0-9]/g, '');
+            } else {
+                val = val.replace(/[^0-9.]/g, '');
+                // Solo un punto decimal
+                const dotIdx = val.indexOf('.');
+                if (dotIdx !== -1) {
+                    val = val.substring(0, dotIdx + 1) + val.substring(dotIdx + 1).replace(/\./g, '');
+                }
+            }
+            el.value = val;
+        }
+
+        // Selecciona y limpia el 0 al hacer foco
+        function handleNumericFocus(el) {
+            if (el.value === '0' || parseFloat(el.value) === 0) {
+                el.value = '';
+            }
+            el.select();
+        }
+
+        // Restaura default si queda vacío o negativo al salir
+        function handleNumericBlur(el, defaultVal) {
+            const norm = el.value.replace(',', '.');
+            const num = parseFloat(norm);
+            if (el.value === '' || isNaN(num) || num < 0) {
+                el.value = defaultVal;
+            }
+        }
+
+        function updateItem(id, field, value) {
+            const item = invoiceItems.find(i => i.id === id);
+            if (item) {
+                if (field === 'desc') {
+                    item[field] = value;
+                } else {
+                    const parsed = parseFloat(String(value).replace(',', '.')) || 0;
+                    item[field] = Math.max(0, parsed);
+                }
+                calculateTotals();
+            }
+        }
+
+        let bcvRate = parseFloat('{{ bcv_usd.value|default:1 }}'.replace(',', '.'));
+
+        function toggleCustomRate() {
+            const isCustom = document.getElementById('use_custom_rate').checked;
+            const rateInput = document.getElementById('global_rate');
+            const rateLabel = document.getElementById('rate_label');
+            if (isCustom) {
+                rateInput.readOnly = false;
+                rateLabel.innerText = 'MANUAL';
+                rateLabel.classList.add('text-primary');
+            } else {
+                rateInput.readOnly = true;
+                rateInput.value = bcvRate;
+                rateLabel.innerText = 'BCV';
+                rateLabel.classList.remove('text-primary');
+            }
+            calculateTotals();
+        }
+
+        function toggleIgtf() {
+            const isChecked = document.getElementById('igtf_toggle').checked;
+            const inputRow = document.getElementById('igtf_input_row');
+            if (isChecked) {
+                inputRow.classList.remove('d-none');
+            } else {
+                inputRow.classList.add('d-none');
+                document.getElementById('igtf_amount_usd').value = '';
+            }
+            calculateTotals();
+        }
+
+        let discountIsPercent = true; // true = %, false = Bs. fijo
+        function toggleDiscountType() {
+            discountIsPercent = !discountIsPercent;
+            const btn = document.getElementById('discount_type_btn');
+            btn.innerText = discountIsPercent ? '%' : 'Bs.';
+            btn.classList.toggle('btn-outline-secondary', discountIsPercent);
+            btn.classList.toggle('btn-outline-warning', !discountIsPercent);
+            calculateTotals();
+        }
+
+        function updateGlobalSettings() {
+            renderRows();
+            calculateTotals();
+        }
+
+        function renderRows() {
+            const container = document.getElementById('invoice-items-body');
+            const globalCurrency = document.querySelector('input[name="global_currency"]:checked').value;
+            container.innerHTML = '';
+
+            invoiceItems.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'row g-2 align-items-start bg-light p-3 rounded-3 border';
+                row.style.marginBottom = '16px';
+
+                row.innerHTML = `
+                    <div class="col-12 col-md-5 mb-1 mb-md-0">
+                        <label class="d-md-none small text-muted fw-bold mb-1">Descripción</label>
+                        <input type="text" class="invoice-input" placeholder="Ej: Servicio de Consultoría" value="${item.desc}" onchange="updateItem(${item.id}, 'desc', this.value)">
+                        <div style="min-height: 16px;"></div>
+                    </div>
+                    <div class="col-3 col-md-2">
+                        <label class="d-md-none small text-muted fw-bold mb-1">Cant.</label>
+                        <input type="text" inputmode="numeric" class="invoice-input text-center px-1"
+                            value="${item.qty}"
+                            onfocus="handleNumericFocus(this)"
+                            onblur="handleNumericBlur(this, 1); updateItem(${item.id}, 'qty', this.value)"
+                            oninput="sanitizeNumeric(this, true); updateItem(${item.id}, 'qty', this.value)">
+                        <div style="min-height: 16px;"></div>
+                    </div>
+                    <div class="col-5 col-md-3">
+                        <label class="d-md-none small text-muted fw-bold mb-1">Precio</label>
+                        <div class="input-group" style="height: 36px;">
+                            <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 6px 0 0 6px; font-size: 0.85rem; font-weight: bold;">
+                                ${globalCurrency === 'VED' ? 'Bs.' : '$'}
+                            </span>
+                            <input type="text" inputmode="decimal" class="form-control border-start-0 ps-0"
+                                value="${item.price}"
+                                onfocus="handleNumericFocus(this)"
+                                onblur="handleNumericBlur(this, 0); updateItem(${item.id}, 'price', this.value)"
+                                oninput="sanitizeNumeric(this, false); updateItem(${item.id}, 'price', this.value)"
+                                style="border-radius: 0 6px 6px 0; font-size: 0.9rem;">
+                        </div>
+                        <div id="hint_${item.id}" class="text-primary fw-bold mt-1" style="font-size: 0.68rem; min-height: 16px;"></div>
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <label class="d-md-none small text-muted fw-bold mb-1">IVA</label>
+                        <select class="invoice-input px-1 text-center" onchange="updateItem(${item.id}, 'iva', this.value)">
+                            <option value="0.16" ${item.iva === 0.16 ? 'selected' : ''}>16%</option>
+                            <option value="0.08" ${item.iva === 0.08 ? 'selected' : ''}>8%</option>
+                            <option value="0" ${item.iva === 0 ? 'selected' : ''}>0%</option>
+                        </select>
+                        <div style="min-height: 16px;"></div>
+                    </div>
+                    <div class="col-1 col-md-1 text-end">
+                        <label class="d-md-none small text-muted mb-1 d-block">&nbsp;</label>
+                        <button class="btn-remove-item d-inline-flex justify-content-center align-items-center" onclick="removeItem(${item.id})" style="height: 36px; width: 36px;"><i class="fas fa-trash"></i></button>
+                        <div style="min-height: 16px;"></div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function calculateTotals() {
+            const rate = parseFloat(document.getElementById('global_rate').value) || 1;
+            const useIgtf = document.getElementById('igtf_toggle').checked;
+            const globalCurrency = document.querySelector('input[name="global_currency"]:checked').value;
+            const isPriceTotal = document.querySelector('input[name="price_type"]:checked').value === 'total';
+            
+            let totalBase = 0;
+            let totalExempt = 0;
+            let totalIva = 0;
+
+            invoiceItems.forEach(item => {
+                let basePriceInput = item.price;
+                let isCalculated = false;
+                
+                if (isPriceTotal && item.iva > 0) {
+                    basePriceInput = item.price / (1 + item.iva);
+                    isCalculated = true;
+                }
+                
+                const hintEl = document.getElementById('hint_' + item.id);
+                if (hintEl) {
+                    if (isCalculated && item.price > 0) {
+                        hintEl.innerText = 'Base: ' + basePriceInput.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    } else {
+                        hintEl.innerText = '';
+                    }
+                }
+                
+                const basePriceBs = globalCurrency === 'USD' ? basePriceInput * rate : basePriceInput;
+                const lineTotalBaseBs = basePriceBs * item.qty;
+                
+                if (item.iva > 0) {
+                    totalBase += lineTotalBaseBs;
+                    totalIva += lineTotalBaseBs * item.iva;
+                } else {
+                    totalExempt += lineTotalBaseBs;
+                }
+            });
+
+            // ── Totales brutos (antes del descuento)
+            const rawTotal = totalBase + totalExempt; // solo las bases, sin IVA
+
+            // ── Descuento global (se aplica sobre el subtotal bruto de bases)
+            const discountRaw = parseFloat(String(document.getElementById('discount_value').value).replace(',', '.')) || 0;
+            let discountBs = 0;
+            if (discountRaw > 0 && rawTotal > 0) {
+                discountBs = discountIsPercent
+                    ? rawTotal * (discountRaw / 100)
+                    : Math.min(discountRaw, rawTotal); // no puede ser mayor al total
+            }
+            const discountFactor = rawTotal > 0 ? (rawTotal - discountBs) / rawTotal : 1;
+
+            // Aplicar descuento proporcional a base gravada, exenta e IVA
+            const discountedBase   = totalBase   * discountFactor;
+            const discountedExempt = totalExempt * discountFactor;
+            const discountedIva    = totalIva    * discountFactor;
+
+            // Subtotal bruto para mostrar (base+exento+iva sin descontar)
+            const subtotoBruto = totalBase + totalExempt + totalIva;
+
+            // Mostrar/ocultar fila de descuento
+            const discRow = document.getElementById('discount_display_row');
+            if (discountBs > 0) {
+                discRow.classList.remove('d-none');
+                document.getElementById('discount_amount_bs').innerText = discountBs.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                discRow.classList.add('d-none');
+            }
+            document.getElementById('total_bruto').innerText = subtotoBruto.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            // IGTF: solo sobre el monto pagado en divisas convertido a Bs.
+            let igtf = 0;
+            if (useIgtf) {
+                const igtfUsd = parseFloat(document.getElementById('igtf_amount_usd').value) || 0;
+                const igtfBs = igtfUsd * rate;
+                igtf = igtfBs * 0.03;
+
+                // Mostrar equivalente en Bs en el label
+                document.getElementById('igtf_amount_bs_label').innerText = '= Bs. ' + igtfBs.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            const subtotalGeneral = discountedBase + discountedExempt + discountedIva;
+            const grandTotalBs = subtotalGeneral + igtf;
+
+            document.getElementById('total_base').innerText   = discountedBase.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('total_exempt').innerText = discountedExempt.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('total_iva').innerText    = discountedIva.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            if (useIgtf && igtf > 0) {
+                document.getElementById('igtf_display_row').classList.remove('d-none');
+                document.getElementById('total_igtf').innerText = igtf.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                document.getElementById('igtf_display_row').classList.add('d-none');
+            }
+
+            document.getElementById('grand_total_bs').innerText = grandTotalBs.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('grand_total_usd').innerText = (grandTotalBs / rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
         function copyToClipboard(text, element) {
             navigator.clipboard.writeText(text.replace(',', '.')).then(() => {
                 const badge = element.querySelector('.copy-badge');
@@ -236,9 +932,20 @@
             window.location.href = `?export=indicator_${format}&name=${name}`;
         }
         document.addEventListener("DOMContentLoaded", function() {
+            // Activar pestaña por URL
             const urlParams = new URLSearchParams(window.location.search);
             const activeTab = urlParams.get('tab');
-            if (activeTab) { const tabEl = document.querySelector(`#${activeTab}-tab`); if (tabEl) { new bootstrap.Tab(tabEl).show(); } }
+            if (activeTab) {
+                const tabEl = document.querySelector('#' + activeTab + '-tab');
+                if (tabEl) { new bootstrap.Tab(tabEl).show(); }
+            }
+
+            // Renderizar la calculadora cuando Bootstrap termine de mostrar la pestaña
+            const herramientasTabEl = document.getElementById('herramientas-tab');
+            herramientasTabEl.addEventListener('shown.bs.tab', function () {
+                renderRows();
+                calculateTotals();
+            });
 
             const labels = JSON.parse('{{ chart_labels|safe|escapejs }}');
             const dataBCV = JSON.parse('{{ chart_data_bcv|safe|escapejs }}');
