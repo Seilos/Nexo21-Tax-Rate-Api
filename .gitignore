@@ -1,0 +1,19 @@
+# Entornos y Secretos (¡CRÍTICO: NO BORRAR ESTAS LÍNEAS!)
+.env
+db.sqlite3
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos Virtuales
+venv/
+env/
+ENV/
+
+# Archivos estáticos recolectados
+staticfiles/
+
+# Logs
+*.log

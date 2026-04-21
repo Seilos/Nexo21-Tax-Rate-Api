@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexo 21 Dólar Venezuela | Precio BCV Hoy</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f6f9; }
+        .hero-section { background: linear-gradient(135deg, #1a1d20 0%, #2c3034 100%); color: white; padding: 40px 0 60px; margin-bottom: -30px; }
+        .hero-section a { text-decoration: none; color: inherit; transition: opacity 0.2s; }
+        .hero-section a:hover { opacity: 0.85; }
+        .text-cyan { color: #0dcaf0; }
+        
+        .ad-external-top { background-color: #ffffff; border: 1px dashed #dee2e6; border-radius: 8px; min-height: 90px; display: flex; align-items: center; justify-content: center; color: #adb5bd; font-size: 0.75rem; margin: 20px auto; max-width: 970px; }
+        .ad-internal-promo { background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%); color: white; border-radius: 12px; padding: 25px; margin: 25px 0; box-shadow: 0 10px 20px rgba(13, 110, 253, 0.15); }
+
+        .nav-pills .nav-link { color: #6c757d; font-weight: 600; border-radius: 8px; padding: 10px 25px; border: 1px solid transparent; transition: all 0.2s ease-in-out; }
+        .nav-pills .nav-link:hover:not(.active) { background-color: #e9ecef; border-color: #dee2e6; color: #0d6efd; }
+        .nav-pills .nav-link.active { background-color: #0d6efd; color: white; }
+
+        .rate-card { border: none; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); background: white; border-top: 5px solid transparent; text-align: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+        .rate-card:active { transform: scale(0.98); }
+        .rate-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.08); transform: translateY(-3px); }
+        
+        .copy-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: #28a745; color: white; padding: 2px 8px; border-radius: 20px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .copy-badge.visible { opacity: 1; }
+
+        .card-bcv-usd { border-top-color: #1a1d20; }
+        .card-bcv-eur { border-top-color: #0d6efd; }
+        .card-binance { border-top-color: #F3BA2F; }
+        .card-indicator-act { border-top-color: #6f42c1; }
+        .card-indicator-prom { border-top-color: #0dcaf0; }
+        .card-indicator-inf { border-top-color: #dc3545; }
+
+        .price-text { font-size: 2rem; font-weight: 800; color: #1a1d20; }
+
+        .legal-alert { background-color: #f8f9fa; color: #6c757d; border: 0 !important; border-radius: 12px; padding: 20px; font-size: 0.82rem; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .chart-container { border-radius: 12px; background: white; padding: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); }
+        
+        .filter-btn { border-radius: 20px; font-size: 0.82rem; padding: 6px 16px; border: 1px solid #dee2e6; background: white; color: #6c757d; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+        .filter-btn:hover { background-color: #f8f9fa; color: #0d6efd; }
+        .filter-btn.active { background: #0d6efd; color: white; border-color: #0d6efd; }
+
+        .export-btn { font-size: 0.8rem; font-weight: 700; border-radius: 6px; padding: 5px 15px; }
+
+        .history-table-container { max-height: 500px; overflow-y: auto; border-radius: 8px; border: 1px solid #eee; }
+        .history-table-container thead th { position: sticky; top: 0; background-color: #f8f9fa; z-index: 10; border-bottom: 2px solid #dee2e6; }
+        
+        .download-hint { font-size: 0.62rem; color: #6c757d; font-weight: 600; margin-top: 15px; border-top: 1px solid #eee; pt-2; }
+        .download-hint i { color: #0d6efd; margin-right: 4px; }
+        .usage-tag { font-size: 0.65rem; color: #6f42c1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <header class="hero-section text-center">
+        <div class="container">
+            <a href="/">
+                <h1 class="display-5 fw-bold mb-1">Nexo 21 <span class="text-cyan">Dólar Venezuela</span></h1>
+            </a>
+            <p class="lead opacity-75 mb-0">Tasas Oficiales e Indicadores Económicos</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        
+        <div class="ad-external-top shadow-sm">
+            <div class="text-center"><i class="fas fa-ad me-2"></i> ESPACIO PARA PUBLICIDAD EXTERNA (GOOGLE ADS)</div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-4">
+            <ul class="nav nav-pills bg-white p-2 rounded-3 shadow-sm" id="mainTab" role="tablist">
+                <li class="nav-item"><button class="nav-link active" id="tasas-tab" data-bs-toggle="pill" data-bs-target="#tab-tasas" type="button" role="tab">Tasas</button></li>
+                <li class="nav-item"><button class="nav-link" id="graficos-tab" data-bs-toggle="pill" data-bs-target="#tab-graficos" type="button" role="tab">Estadísticas</button></li>
+                <li class="nav-item"><button class="nav-link" id="indicadores-tab" data-bs-toggle="pill" data-bs-target="#tab-indicadores" type="button" role="tab">Indicadores</button></li>
+                <li class="nav-item"><button class="nav-link" id="historial-tab" data-bs-toggle="pill" data-bs-target="#tab-historial" type="button" role="tab">Historial</button></li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="mainTabContent">
+            
+            <!-- TASAS -->
+            <div class="tab-pane fade show active" id="tab-tasas" role="tabpanel">
+                <div class="row g-4 justify-content-center text-center">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card rate-card card-bcv-usd h-100 p-4" onclick="copyToClipboard('{{ bcv_usd.value|floatformat:4 }}', this)">
+                            <div class="copy-badge"><i class="fas fa-check me-1"></i> Copiado</div>
+                            <h6 class="fw-bold mb-3">BCV Oficial</h6>
+                            <span class="badge bg-dark rounded-pill px-4 mb-3 mx-auto">DÓLAR USD</span>
+                            <div class="price-text">Bs. {{ bcv_usd.value|floatformat:4|default:"0.00" }}</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Vigencia: {{ bcv_usd.fecha_valor|date:"d/m/Y" }}</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card rate-card card-bcv-eur h-100 p-4" onclick="copyToClipboard('{{ bcv_eur.value|floatformat:8 }}', this)">
+                            <div class="copy-badge"><i class="fas fa-check me-1"></i> Copiado</div>
+                            <h6 class="fw-bold mb-3">BCV Oficial</h6>
+                            <span class="badge bg-primary rounded-pill px-4 mb-3 mx-auto">EURO EUR</span>
+                            <div class="price-text text-primary">Bs. {{ bcv_eur.value|floatformat:8|default:"0.00" }}</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Vigencia: {{ bcv_eur.fecha_valor|date:"d/m/Y" }}</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card rate-card card-binance h-100 p-4" onclick="copyToClipboard('{{ binance_usdt.value|floatformat:2 }}', this)">
+                            <div class="copy-badge"><i class="fas fa-check me-1"></i> Copiado</div>
+                            <h6 class="fw-bold mb-3">Referencial Binance</h6>
+                            <span class="badge text-dark rounded-pill px-4 mb-3 mx-auto" style="background-color: #F3BA2F;">USDT</span>
+                            <div class="price-text mt-2" style="color: #F3BA2F;">Bs. {{ binance_usdt.value|floatformat:2|default:"0.00" }}</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Refresco: Cada Hora</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ad-internal-promo shadow">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8 text-center text-lg-start mb-3 mb-lg-0">
+                            <h4 class="fw-bold mb-1">Automatiza tu negocio con Clara POS</h4>
+                            <p class="mb-0 opacity-90">Gestión de inventarios y facturación fiscal para Venezuela.</p>
+                        </div>
+                        <div class="col-lg-4 text-center text-lg-end">
+                            <a href="#" class="btn btn-light rounded-pill px-4 fw-bold text-primary">Saber más</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert legal-alert shadow-sm text-center">
+                    <i class="fas fa-balance-scale me-1 text-primary"></i> <strong>Aviso Legal de Cumplimiento:</strong> Los datos de tasas oficiales proceden directamente de la fuente oficial <a href="https://www.bcv.org.ve" target="_blank" class="text-decoration-none fw-bold">bcv.org.ve</a>. Nexo 21 aclara que la única tasa <strong>legalmente vinculante, sancionada y vigente</strong> para su uso en transacciones comerciales y contables en la República Bolivariana de Venezuela es la emitida por el <strong>Banco Central de Venezuela (BCV)</strong>.
+                    <br><br>
+                    La tasa <strong>"Referencial Binance"</strong> se ofrece exclusivamente para fines informativos, de interés general y análisis de trading. Esta tasa <strong>NO es de uso oficial ni legal</strong>, y su utilización como marcador para la determinación de precios en el comercio nacional está <strong>prohibida</strong> por la normativa vigente. Nexo 21 no se hace responsable por el uso indebido de dicha información referencial por parte de terceros.
+                </div>
+            </div>
+
+            <!-- ESTADÍSTICAS -->
+            <div class="tab-pane fade" id="tab-graficos" role="tabpanel">
+                <div class="chart-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0">Evolución y Variación</h5>
+                    </div>
+                    <canvas id="compChart" height="90"></canvas>
+                </div>
+            </div>
+
+            <!-- INDICADORES -->
+            <div class="tab-pane fade" id="tab-indicadores" role="tabpanel">
+                <div class="row g-4 justify-content-center text-center">
+                    <!-- Tasa Activa -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card rate-card card-indicator-act h-100 p-4" onclick="downloadIndicator('INTERES_ACTIVA', 'excel')">
+                            <div class="usage-tag mb-2">Uso: Prestaciones Sociales</div>
+                            <h6 class="fw-bold mb-3">Tasa de Interés Activa</h6>
+                            <span class="badge bg-secondary rounded-pill px-4 mb-3 mx-auto">INTERÉS LOTTT</span>
+                            <div class="price-text" style="color: #6f42c1;">{{ interes_activa.value }}%</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Referencia: {{ interes_activa.fecha_referencia|date:"F Y" }}</div>
+                            <div class="download-hint pt-2"><i class="fas fa-file-excel"></i> Bajar Historial (Excel)</div>
+                        </div>
+                    </div>
+                    <!-- Tasa Promedio -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card rate-card card-indicator-prom h-100 p-4" onclick="downloadIndicator('INTERES_PROM', 'excel')">
+                            <div class="usage-tag mb-2" style="color: #0dcaf0;">Uso: Prestaciones Sociales</div>
+                            <h6 class="fw-bold mb-3">Tasa Interés Promedio</h6>
+                            <span class="badge bg-secondary rounded-pill px-4 mb-3 mx-auto">PASIVA / PROMEDIO</span>
+                            <div class="price-text" style="color: #0dcaf0;">{{ interes_pasiva.value }}%</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Referencia: {{ interes_pasiva.fecha_referencia|date:"F Y" }}</div>
+                            <div class="download-hint pt-2"><i class="fas fa-file-excel"></i> Bajar Historial (Excel)</div>
+                        </div>
+                    </div>
+                    <!-- Inflación -->
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card rate-card card-indicator-inf h-100 p-4" onclick="downloadIndicator('INFLACION', 'excel')">
+                            <div class="usage-tag mb-2" style="color: #dc3545;">Uso: Análisis Económico</div>
+                            <h6 class="fw-bold mb-3">Inflación (INPC)</h6>
+                            <span class="badge bg-danger rounded-pill px-4 mb-3 mx-auto">VAR. MENSUAL</span>
+                            <div class="price-text text-danger">{{ inflacion.value|default:"0.00" }}%</div>
+                            <div class="pt-3 text-muted small border-top mt-4">Referencia: {{ inflacion.fecha_referencia|date:"F Y" }}</div>
+                            <div class="download-hint pt-2"><i class="fas fa-file-excel"></i> Bajar Historial (Excel)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert legal-alert shadow-sm text-center">
+                    <i class="fas fa-info-circle me-1 text-primary"></i> Las tasas de interés corresponden a los avisos oficiales del BCV para el cálculo de beneficios de la LOTTT. 
+                    <a href="https://www.bcv.org.ve/estadisticas/tasas-de-interes" target="_blank" class="ms-2 fw-bold text-decoration-none">Ver Fuente Oficial <i class="fas fa-external-link-alt small"></i></a>
+                </div>
+            </div>
+
+            <!-- HISTORIAL -->
+            <div class="tab-pane fade" id="tab-historial" role="tabpanel">
+                <div class="chart-container">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-4 mb-4 border-bottom pb-4">
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="?tab=historial&period=month&currency={{ selected_currency }}" class="filter-btn {% if period == 'month' %}active{% endif %}">Mes Curso</a>
+                            <a href="?tab=historial&period=3months&currency={{ selected_currency }}" class="filter-btn {% if period == '3months' %}active{% endif %}">3 Meses</a>
+                            {% for year in available_years %}<a href="?tab=historial&period={{ year }}&currency={{ selected_currency }}" class="filter-btn {% if period == year|stringformat:'s' %}active{% endif %}">{{ year }}</a>{% endfor %}
+                            <a href="?tab=historial&period=all&currency={{ selected_currency }}" class="filter-btn {% if period == 'all' %}active{% endif %}">Todo</a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-success dropdown-toggle export-btn" data-bs-toggle="dropdown"><i class="fas fa-download me-1"></i> Exportar</button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="?export=csv&tab=historial&period={{ period }}&currency={{ selected_currency }}">CSV</a></li>
+                                    <li><a class="dropdown-item" href="?export=excel&tab=historial&period={{ period }}&currency={{ selected_currency }}">Excel</a></li>
+                                </ul>
+                            </div>
+                            <form method="GET" action="." class="d-flex gap-2"><input type="hidden" name="tab" value="historial"><input type="hidden" name="period" value="{{ period }}"><select name="currency" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">{% for cur in available_currencies %}<option value="{{ cur }}" {% if selected_currency == cur %}selected{% endif %}>{{ cur }}</option>{% endfor %}</select></form>
+                        </div>
+                    </div>
+                    <div class="table-responsive history-table-container">
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Fecha</th><th>Moneda</th><th>Valor</th><th>Origen</th></tr></thead>
+                            <tbody>{% for e in history_table %}<tr><td class="fw-bold">{{ e.fecha_valor|date:"d/m/Y" }}</td><td><span class="badge bg-light text-dark border">{{ e.currency }}</span></td><td class="fw-bold">Bs. {{ e.value|floatformat:8 }}</td><td class="text-muted small">{{ e.source }}</td></tr>{% endfor %}</tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center text-muted small py-4">&copy; 2026 Nexo 21 - Inteligencia Económica.</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text.replace(',', '.')).then(() => {
+                const badge = element.querySelector('.copy-badge');
+                badge.classList.add('visible');
+                setTimeout(() => badge.classList.remove('visible'), 1500);
+            });
+        }
+        function downloadIndicator(name, format) {
+            window.location.href = `?export=indicator_${format}&name=${name}`;
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');
+            if (activeTab) { const tabEl = document.querySelector(`#${activeTab}-tab`); if (tabEl) { new bootstrap.Tab(tabEl).show(); } }
+
+            const labels = JSON.parse('{{ chart_labels|safe|escapejs }}');
+            const dataBCV = JSON.parse('{{ chart_data_bcv|safe|escapejs }}');
+            const dataBinance = JSON.parse('{{ chart_data_binance|safe|escapejs }}');
+            
+            new Chart(document.getElementById('compChart'), {
+                type: 'line',
+                data: { labels: labels, datasets: [ { label: 'BCV', data: dataBCV, borderColor: '#0d6efd', backgroundColor: 'rgba(13, 110, 253, 0.05)', fill: true, tension: 0.3, borderWidth: 3 }, { label: 'Binance', data: dataBinance, borderColor: '#F3BA2F', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0.3, borderWidth: 2 } ] },
+                options: { responsive: true, plugins: { legend: { display: true, position: 'bottom', labels: { usePointStyle: true } } } }
+            });
+        });
+    </script>
+</body>
+</html>
