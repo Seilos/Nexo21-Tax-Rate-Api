@@ -41,19 +41,31 @@ class VisitCounterMiddleware:
 
             today = timezone.now().date()
             
-            # Usar get_or_create y F para evitar race conditions y ser eficiente
-            visit, created = PageVisit.objects.get_or_create(
-                path=path,
-                date=today,
-                visitor_type=visitor_type,
-                platform=platform,
-                referer=referer[:500], # Trucar si es necesario
-                defaults={'count': 1}
-            )
-            
-            if not created:
-                visit.count = F('count') + 1
-                visit.save()
+            from django.db import IntegrityError
+            try:
+                # Usar get_or_create y F para evitar race conditions y ser eficiente
+                visit, created = PageVisit.objects.get_or_create(
+                    path=path,
+                    date=today,
+                    visitor_type=visitor_type,
+                    platform=platform,
+                    referer=referer[:500],
+                    defaults={'count': 1}
+                )
+                
+                if not created:
+                    visit.count = F('count') + 1
+                    visit.save()
+            except IntegrityError:
+                # Si falló por una race condition (otra petición creó el registro justo antes),
+                # simplemente recuperamos el existente e incrementamos
+                PageVisit.objects.filter(
+                    path=path,
+                    date=today,
+                    visitor_type=visitor_type,
+                    platform=platform,
+                    referer=referer[:500]
+                ).update(count=F('count') + 1)
 
         response = self.get_response(request)
         return response

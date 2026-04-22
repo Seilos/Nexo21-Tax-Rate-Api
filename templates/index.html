@@ -179,6 +179,7 @@
                     </button>
                     <ul class="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby="herramientas-dropdown">
                         <li><button class="dropdown-item py-2" onclick="showTool('iva')"><i class="fas fa-calculator me-2 text-primary"></i> Calculadora de IVA</button></li>
+                        <li><a class="dropdown-item py-2" href="/api/docs" target="_blank"><i class="fas fa-code me-2 text-success"></i> Documentación API</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item py-2 disabled text-muted" href="#"><i class="fas fa-lock me-2"></i> Próximamente...</a></li>
                     </ul>
@@ -199,7 +200,10 @@
                             <h6 class="fw-bold mb-3">BCV Oficial</h6>
                             <span class="badge bg-dark rounded-pill px-4 mb-3 mx-auto">DÓLAR USD</span>
                             <div class="price-text">Bs. {{ bcv_usd.value|floatformat:4|default:"0.00" }}</div>
-                            <div class="pt-3 text-muted small border-top mt-4">Vigencia: {{ bcv_usd.fecha_valor|date:"d/m/Y" }}</div>
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-4">
+                                <span class="text-muted small">Vigencia: {{ bcv_usd.fecha_valor|date:"d/m/Y" }}</span>
+                                <a href="/api/rates/bcv/latest?currency=USD" target="_blank" class="text-decoration-none small fw-bold text-primary"><i class="fas fa-link me-1"></i>JSON</a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
@@ -208,7 +212,10 @@
                             <h6 class="fw-bold mb-3">BCV Oficial</h6>
                             <span class="badge bg-primary rounded-pill px-4 mb-3 mx-auto">EURO EUR</span>
                             <div class="price-text text-primary">Bs. {{ bcv_eur.value|floatformat:8|default:"0.00" }}</div>
-                            <div class="pt-3 text-muted small border-top mt-4">Vigencia: {{ bcv_eur.fecha_valor|date:"d/m/Y" }}</div>
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-4">
+                                <span class="text-muted small">Vigencia: {{ bcv_eur.fecha_valor|date:"d/m/Y" }}</span>
+                                <a href="/api/rates/bcv/latest?currency=EUR" target="_blank" class="text-decoration-none small fw-bold text-primary"><i class="fas fa-link me-1"></i>JSON</a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
