@@ -63,11 +63,17 @@ MIDDLEWARE = [
 ]
 
 # CORS: Allow the Nexo21 panel and future SaaS clients to call this API
+_extra_cors = [
+    o.strip() for o in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if o.strip()
+]
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080',
     'http://localhost:8080',
-]
-# In production, add your real domains here (e.g., 'https://nexo21.app')
+    'https://www.yiapvzla.com',
+    'https://yiapvzla.com',
+    'https://yiap.app',
+    'https://www.yiap.app',
+] + _extra_cors
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS']
 CORS_URLS_REGEX = r'^/api/.*$'
 
